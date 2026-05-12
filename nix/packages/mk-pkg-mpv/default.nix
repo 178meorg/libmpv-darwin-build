@@ -255,6 +255,12 @@ pkgs.stdenvNoCC.mkDerivation {
       tee configure.log
   '';
   buildPhase = ''
+    mkdir -p .home .cache/clang .cache/swift-module-cache
+    export HOME=$PWD/.home
+    export XDG_CACHE_HOME=$PWD/.cache
+    export CLANG_MODULE_CACHE_PATH=$PWD/.cache/clang
+    export SWIFT_MODULECACHE_PATH=$PWD/.cache/swift-module-cache
+
     meson compile -vC build
   '';
   installPhase = ''

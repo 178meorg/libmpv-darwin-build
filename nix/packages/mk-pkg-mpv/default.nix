@@ -74,6 +74,8 @@ pkgs.stdenvNoCC.mkDerivation {
     ++ pkgs.lib.optionals (variant == "video") [ uchardet ];
   configurePhase = ''
     export PATH=${pkgs.darwin.xcode}/Contents/Developer/usr/bin:$PATH
+    export MACOS_SDK=${pkgs.darwin.xcode}/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    export MACOS_SDK_VERSION=$(${pkgs.darwin.xcode}/Contents/Developer/usr/bin/xcodebuild -sdk macosx -version ProductVersion 2>/dev/null || echo 0.0)
 
     DISABLE_ALL_OPTIONS=(
       `# booleans`

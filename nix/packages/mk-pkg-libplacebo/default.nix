@@ -7,6 +7,9 @@
 let
   name = "libplacebo";
   packageLock = (import ../../../packages.lock.nix).${name};
+  gladLock = (import ../../../packages.lock.nix).libplaceboGlad;
+  jinjaLock = (import ../../../packages.lock.nix).libplaceboJinja;
+  markupsafeLock = (import ../../../packages.lock.nix).libplaceboMarkupSafe;
   inherit (packageLock) version;
 
   callPackage = pkgs.lib.callPackageWith { inherit pkgs os arch; };
@@ -18,13 +21,36 @@ let
     name = "${pname}-source-${version}";
     inherit (packageLock) url sha256;
   };
+  gladSrc = callPackage ../../utils/fetch-tarball/default.nix {
+    name = "${pname}-glad-source-${gladLock.version}";
+    inherit (gladLock) url sha256;
+  };
+  jinjaSrc = callPackage ../../utils/fetch-tarball/default.nix {
+    name = "${pname}-jinja-source-${jinjaLock.version}";
+    inherit (jinjaLock) url sha256;
+  };
+  markupsafeSrc = callPackage ../../utils/fetch-tarball/default.nix {
+    name = "${pname}-markupsafe-source-${markupsafeLock.version}";
+    inherit (markupsafeLock) url sha256;
+  };
+  patchedSource = pkgs.runCommand "${pname}-patched-source-${version}" { } ''
+    cp -r ${src} src
+    chmod -R 777 src
+
+    rm -rf src/3rdparty/glad src/3rdparty/jinja src/3rdparty/markupsafe
+    cp -r ${gladSrc} src/3rdparty/glad
+    cp -r ${jinjaSrc} src/3rdparty/jinja
+    cp -r ${markupsafeSrc} src/3rdparty/markupsafe
+
+    cp -r src $out
+  '';
 in
 
 pkgs.stdenvNoCC.mkDerivation {
   name = "${pname}-${os}-${arch}-${version}";
   pname = pname;
   inherit version;
-  inherit src;
+  src = patchedSource;
   dontUnpack = true;
   enableParallelBuilding = true;
   nativeBuildInputs = [

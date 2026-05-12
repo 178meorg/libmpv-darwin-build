@@ -54,6 +54,21 @@
     url = "https://github.com/haasn/libplacebo/archive/refs/tags/v6.338.2.tar.gz";
     sha256 = "2f1e624e09d72a8c9db70f910f7560e764a1c126dae42acc5b3bcef836a7aec6";
   };
+  libplaceboGlad = {
+    version = "d08b1aa01f8fe57498f04d47b5fa8c48725be877";
+    url = "https://github.com/Dav1dde/glad/archive/d08b1aa01f8fe57498f04d47b5fa8c48725be877.tar.gz";
+    sha256 = "7a5fb3299a20e8088a504f3bb2b7247d85c4207706754180a1b4a4840a8728e4";
+  };
+  libplaceboJinja = {
+    version = "b08cd4bc64bb980df86ed2876978ae5735572280";
+    url = "https://github.com/pallets/jinja/archive/b08cd4bc64bb980df86ed2876978ae5735572280.tar.gz";
+    sha256 = "9a20bab550a760ccb9b38a45d4fe76be92649206ee04633c646d0935a1872b0e";
+  };
+  libplaceboMarkupSafe = {
+    version = "c0254f0cfe51720ecc9e72e8896022af29af5b44";
+    url = "https://github.com/pallets/markupsafe/archive/c0254f0cfe51720ecc9e72e8896022af29af5b44.tar.gz";
+    sha256 = "1826c5d89cc1aa0b3088f538726d339e0c5cd69fbe03f7b8f9a3f880474d1120";
+  };
   libvorbis = {
     version = "1.3.7";
     url = "https://github.com/xiph/vorbis/releases/download/v1.3.7/libvorbis-1.3.7.tar.gz";

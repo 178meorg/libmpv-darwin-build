@@ -68,21 +68,27 @@ jobs:
           XCODE_PATH: ${{ steps.xcode_path.outputs.xcode_path }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
+          rm -rf dist
+          mkdir -p dist/arm64 dist/amd64
+
           nix develop -c make \
             XCODE_PATH=${XCODE_PATH} \
             VERSION=${VERSION} \
             TARGET=mk-out-archive-libs-macos-arm64-video-default
+          cp -R result/. dist/arm64/
+
           nix develop -c make \
             XCODE_PATH=${XCODE_PATH} \
             VERSION=${VERSION} \
             TARGET=mk-out-archive-libs-macos-amd64-video-default
+          cp -R result/. dist/amd64/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
           if-no-files-found: error
           path: |
-            result/*.tar.gz
+            dist/**/*.tar.gz
 
       - name: Release
         uses: softprops/action-gh-release@v3
@@ -90,4 +96,4 @@ jobs:
         with:
           fail_on_unmatched_files: true
           files: |
-            result/*.tar.gz
+            dist/**/*.tar.gz

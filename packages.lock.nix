@@ -69,6 +69,11 @@
     url = "https://github.com/pallets/markupsafe/archive/c0254f0cfe51720ecc9e72e8896022af29af5b44.tar.gz";
     sha256 = "1826c5d89cc1aa0b3088f538726d339e0c5cd69fbe03f7b8f9a3f880474d1120";
   };
+  libplaceboFastFloat = {
+    version = "2b2395f9ac836ffca6404424bcc252bff7aa80e4";
+    url = "https://github.com/fastfloat/fast_float/archive/2b2395f9ac836ffca6404424bcc252bff7aa80e4.tar.gz";
+    sha256 = "230d20e4e4ac1f6a9df92c4d746c6ec536cdb0c085bc8635d4b88cead5dc22cb";
+  };
   libvorbis = {
     version = "1.3.7";
     url = "https://github.com/xiph/vorbis/releases/download/v1.3.7/libvorbis-1.3.7.tar.gz";

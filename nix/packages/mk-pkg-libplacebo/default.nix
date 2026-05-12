@@ -10,6 +10,7 @@ let
   gladLock = (import ../../../packages.lock.nix).libplaceboGlad;
   jinjaLock = (import ../../../packages.lock.nix).libplaceboJinja;
   markupsafeLock = (import ../../../packages.lock.nix).libplaceboMarkupSafe;
+  fastFloatLock = (import ../../../packages.lock.nix).libplaceboFastFloat;
   inherit (packageLock) version;
 
   callPackage = pkgs.lib.callPackageWith { inherit pkgs os arch; };
@@ -33,14 +34,19 @@ let
     name = "${pname}-markupsafe-source-${markupsafeLock.version}";
     inherit (markupsafeLock) url sha256;
   };
+  fastFloatSrc = callPackage ../../utils/fetch-tarball/default.nix {
+    name = "${pname}-fast-float-source-${fastFloatLock.version}";
+    inherit (fastFloatLock) url sha256;
+  };
   patchedSource = pkgs.runCommand "${pname}-patched-source-${version}" { } ''
     cp -r ${src} src
     chmod -R 777 src
 
-    rm -rf src/3rdparty/glad src/3rdparty/jinja src/3rdparty/markupsafe
+    rm -rf src/3rdparty/glad src/3rdparty/jinja src/3rdparty/markupsafe src/3rdparty/fast_float
     cp -r ${gladSrc} src/3rdparty/glad
     cp -r ${jinjaSrc} src/3rdparty/jinja
     cp -r ${markupsafeSrc} src/3rdparty/markupsafe
+    cp -r ${fastFloatSrc} src/3rdparty/fast_float
 
     cp -r src $out
   '';

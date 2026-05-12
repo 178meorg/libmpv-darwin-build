@@ -23,6 +23,7 @@ let
   nativeFile = callPackage ../../utils/native-file/default.nix { };
   crossFile = callPackage ../../utils/cross-file/default.nix { };
   xctoolchainLipo = callPackage ../../utils/xctoolchain/lipo.nix { };
+  xctoolchainSwiftc = callPackage ../../utils/xctoolchain/swiftc.nix { };
   ffmpeg = callPackage ../mk-pkg-ffmpeg/default.nix { };
   libplacebo = callPackage ../mk-pkg-libplacebo/default.nix { };
   libass = callPackage ../mk-pkg-libass/default.nix { };
@@ -34,6 +35,7 @@ let
     pkgs.pkg-config
     pkgs.python3
     xctoolchainLipo
+    xctoolchainSwiftc
   ];
 
   pname = import ../../utils/name/package.nix name;
@@ -172,7 +174,7 @@ pkgs.stdenvNoCC.mkDerivation {
       -Dmacos-cocoa-cb=disabled `# macOS libmpv backend`
       -Dmacos-media-player=disabled `# macOS Media Player support`
       -Dmacos-touchbar=disabled `# macOS Touch Bar support`
-      -Dswift-build=disabled `# macOS Swift build tools`
+      -Dswift-build=enabled `# macOS Swift build tools`
       -Dswift-flags= `# Optional Swift compiler flags`
 
       `# manpages`

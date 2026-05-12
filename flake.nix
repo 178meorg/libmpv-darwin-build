@@ -12,6 +12,7 @@
   outputs =
     { flakelight, ... }:
     flakelight ./. {
+      pname = "libmpv-darwin-build";
       flakelight.builtinFormatters = false;
       withOverlays = import ./nix/utils/default/overlays.nix;
       nixpkgs.config = {

@@ -42,6 +42,7 @@ if arch != archs.universal then
     libogg = callPackage ../mk-pkg-libogg/default.nix { };
     dav1d = callPackage ../mk-pkg-dav1d/default.nix { };
     libxml2 = callPackage ../mk-pkg-libxml2/default.nix { };
+    libplacebo = callPackage ../mk-pkg-libplacebo/default.nix { };
     uchardet = callPackage ../mk-pkg-uchardet/default.nix { };
     libass = callPackage ../mk-pkg-libass/default.nix { };
     harfbuzz = callPackage ../mk-pkg-harfbuzz/default.nix { };
@@ -55,6 +56,7 @@ if arch != archs.universal then
       [
         mpv
         ffmpeg
+        libplacebo
         mbedtls
       ]
       ++ pkgs.lib.optionals (flavor == flavors.encodersgpl) [
@@ -62,15 +64,17 @@ if arch != archs.universal then
         libvorbis
         libogg
       ]
-      ++ pkgs.lib.optionals (variant == variants.video) [
-        dav1d
-        libxml2
-        uchardet
+      ++ [
         libass
         harfbuzz
         fribidi
         freetype
         libpng
+      ]
+      ++ pkgs.lib.optionals (variant == variants.video) [
+        dav1d
+        libxml2
+        uchardet
       ]
       ++ pkgs.lib.optionals (variant == variants.video && flavor == flavors.encodersgpl) [
         libvpx
@@ -99,6 +103,10 @@ if arch != archs.universal then
           cp {} ./build/ \
           \;
       done
+
+      # Bundle libmpv public headers with the dylibs archive as include/mpv/*.h.
+      mkdir -p ./build/include/mpv
+      cp ${mpv}/include/mpv/*.h ./build/include/mpv/
 
       # Rename dylib libfoo.100.99.88.dylib -> libfoo.dylib
       for file in ./build/lib*.dylib; do

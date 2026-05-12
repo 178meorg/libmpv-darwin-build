@@ -68,7 +68,10 @@ jobs:
           XCODE_PATH: ${{ steps.xcode_path.outputs.xcode_path }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          nix develop -c make XCODE_PATH=${XCODE_PATH} VERSION=${VERSION}
+          nix develop -c make \
+            XCODE_PATH=${XCODE_PATH} \
+            VERSION=${VERSION} \
+            TARGET=mk-out-archive-libs-macos-universal-video-default
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
@@ -76,7 +79,6 @@ jobs:
           if-no-files-found: error
           path: |
             result/*.tar.gz
-            result/*.zip
 
       - name: Release
         uses: softprops/action-gh-release@v3
@@ -85,4 +87,3 @@ jobs:
           fail_on_unmatched_files: true
           files: |
             result/*.tar.gz
-            result/*.zip

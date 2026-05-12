@@ -4,22 +4,6 @@ let
 in
 [
   {
-    os = oses.ios;
-    arch = archs.arm64;
-  }
-  {
-    os = oses.iossimulator;
-    arch = archs.arm64;
-  }
-  {
-    os = oses.iossimulator;
-    arch = archs.amd64;
-  }
-  {
-    os = oses.iossimulator;
-    arch = archs.universal;
-  }
-  {
     os = oses.macos;
     arch = archs.arm64;
   }

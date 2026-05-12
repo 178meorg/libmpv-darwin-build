@@ -73,6 +73,8 @@ pkgs.stdenvNoCC.mkDerivation {
     ]
     ++ pkgs.lib.optionals (variant == "video") [ uchardet ];
   configurePhase = ''
+    export PATH=${pkgs.darwin.xcode}/Contents/Developer/usr/bin:$PATH
+
     DISABLE_ALL_OPTIONS=(
       `# booleans`
       -Dgpl=false `# GPL (version 2 or later) build`

@@ -44,15 +44,15 @@ pkgs.stdenvNoCC.mkDerivation {
 
     cat > lua5.2.pc <<EOF
 prefix=$out
-exec_prefix=\${prefix}
-includedir=\${prefix}/include
-libdir=\${prefix}/lib
+exec_prefix=''${prefix}
+includedir=''${prefix}/include
+libdir=''${prefix}/lib
 
 Name: Lua
 Description: An Extensible Extension Language
 Version: ${version}
-Libs: -L\${libdir} -llua
-Cflags: -I\${includedir}
+Libs: -L''${libdir} -llua
+Cflags: -I''${includedir}
 EOF
 
     cp lua5.2.pc lua.pc

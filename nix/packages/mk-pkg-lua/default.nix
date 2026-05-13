@@ -39,7 +39,9 @@ pkgs.stdenvNoCC.mkDerivation {
 
     cflags="-arch ${archFlag} -isysroot ${sdkPath} -mmacosx-version-min=10.9"
 
-    cd $src/src
+    cp -r $src build-src
+    chmod -R u+w build-src
+    cd build-src/src
 
     objs=$(printf '%s\n' *.c | grep -vE '^(lua|luac)\.c$')
     ${cc} $cflags -fPIC -c $objs

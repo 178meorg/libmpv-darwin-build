@@ -10,7 +10,12 @@ let
   inherit (packageLock) version;
 
   callPackage = pkgs.lib.callPackageWith { inherit pkgs os arch; };
-  crossFile = callPackage ../../utils/cross-file/default.nix { };
+  archFlag =
+    if arch == "arm64" then "arm64"
+    else if arch == "amd64" then "x86_64"
+    else abort "Unsupported Lua arch: ${arch}";
+  sdkPath = "${pkgs.darwin.xcode}/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk";
+  cc = "${pkgs.darwin.xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang";
 
   pname = import ../../utils/name/package.nix name;
   src = callPackage ../../utils/fetch-tarball/default.nix {
@@ -32,15 +37,13 @@ pkgs.stdenvNoCC.mkDerivation {
   buildPhase = ''
     mkdir -p $out/lib $out/include $out/lib/pkgconfig
 
-    cross_file=${crossFile}
-    cc=$(sed -n "s/^c *= *'\\(.*\\)'/\\1/p" "$cross_file")
-    cflags=$(sed -n "s/^c_args *= *\\[\\(.*\\)\\]/\\1/p" "$cross_file" | sed "s/', '/ /g; s/'//g; s/,/ /g")
+    cflags="-arch ${archFlag} -isysroot ${sdkPath} -mmacosx-version-min=10.9"
 
     cd $src/src
 
     objs=$(printf '%s\n' *.c | grep -vE '^(lua|luac)\.c$')
-    $cc $cflags -fPIC -c $objs
-    $cc $cflags -dynamiclib -install_name @rpath/liblua.dylib -current_version ${version} -compatibility_version 5.2 -o liblua.dylib *.o -lm
+    ${cc} $cflags -fPIC -c $objs
+    ${cc} $cflags -dynamiclib -install_name @rpath/liblua.dylib -current_version ${version} -compatibility_version 5.2 -o liblua.dylib *.o -lm
 
     cat > lua5.2.pc <<EOF
 prefix=$out

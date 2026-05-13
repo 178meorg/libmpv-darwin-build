@@ -47,18 +47,19 @@ pkgs.stdenvNoCC.mkDerivation {
     ${cc} $cflags -fPIC -c $objs
     ${cc} $cflags -dynamiclib -install_name @rpath/liblua.dylib -current_version ${version} -compatibility_version 5.2 -o liblua.dylib *.o -lm
 
-    cat > lua5.2.pc <<EOF
-prefix=$out
-exec_prefix=''${prefix}
-includedir=''${prefix}/include
-libdir=''${prefix}/lib
+    cat > lua5.2.pc <<'EOF'
+prefix=@out@
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${prefix}/lib
 
 Name: Lua
 Description: An Extensible Extension Language
 Version: ${version}
-Libs: -L''${libdir} -llua
-Cflags: -I''${includedir}
+Libs: -L${libdir} -llua
+Cflags: -I${includedir}
 EOF
+    sed -i "s|@out@|$out|g" lua5.2.pc
 
     cp lua5.2.pc lua.pc
     cp lua5.2.pc lua-5.2.pc

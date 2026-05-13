@@ -49,6 +49,11 @@
     url = "https://wrapdb.mesonbuild.com/v2/libpng_1.6.40-1/get_patch";
     sha256 = "bad558070e0a82faa5c0ae553bcd12d49021fc4b628f232a8e58c3fbd281aae1";
   };
+  lua = {
+    version = "5.2.4";
+    url = "https://www.lua.org/ftp/lua-5.2.4.tar.gz";
+    sha256 = "b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b";
+  };
   libvorbis = {
     version = "1.3.7";
     url = "https://github.com/xiph/vorbis/releases/download/v1.3.7/libvorbis-1.3.7.tar.gz";

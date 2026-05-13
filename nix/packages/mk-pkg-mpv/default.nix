@@ -24,6 +24,7 @@ let
   crossFile = callPackage ../../utils/cross-file/default.nix { };
   xctoolchainLipo = callPackage ../../utils/xctoolchain/lipo.nix { };
   ffmpeg = callPackage ../mk-pkg-ffmpeg/default.nix { };
+  lua = callPackage ../mk-pkg-lua/default.nix { };
   uchardet = callPackage ../mk-pkg-uchardet/default.nix { };
   libass = callPackage ../mk-pkg-libass/default.nix { };
 
@@ -71,7 +72,10 @@ pkgs.stdenvNoCC.mkDerivation {
   enableParallelBuilding = true;
   inherit nativeBuildInputs;
   buildInputs =
-    [ ffmpeg ]
+    [
+      ffmpeg
+      lua
+    ]
     ++ pkgs.lib.optionals (variant == "video") [
       uchardet
       libass

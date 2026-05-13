@@ -36,6 +36,7 @@ if arch != archs.universal then
 
     mpv = callPackage ../mk-pkg-mpv/default.nix { };
     ffmpeg = callPackage ../mk-pkg-ffmpeg/default.nix { };
+    lua = callPackage ../mk-pkg-lua/default.nix { };
     mbedtls = callPackage ../mk-pkg-mbedtls/default.nix { };
     fftoolsFfi = callPackage ../mk-pkg-fftools-ffi/default.nix { };
     libvorbis = callPackage ../mk-pkg-libvorbis/default.nix { };
@@ -55,6 +56,7 @@ if arch != archs.universal then
       [
         mpv
         ffmpeg
+        lua
         mbedtls
       ]
       ++ pkgs.lib.optionals (flavor == flavors.encodersgpl) [

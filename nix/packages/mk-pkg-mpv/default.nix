@@ -23,6 +23,7 @@ let
   nativeFile = callPackage ../../utils/native-file/default.nix { };
   crossFile = callPackage ../../utils/cross-file/default.nix { };
   xctoolchainLipo = callPackage ../../utils/xctoolchain/lipo.nix { };
+  xctoolchainSwiftc = callPackage ../../utils/xctoolchain/swiftc.nix { };
   ffmpeg = callPackage ../mk-pkg-ffmpeg/default.nix { };
   libplacebo = callPackage ../mk-pkg-libplacebo/default.nix { };
   libass = callPackage ../mk-pkg-libass/default.nix { };
@@ -34,6 +35,7 @@ let
     pkgs.pkg-config
     pkgs.python3
     xctoolchainLipo
+    xctoolchainSwiftc
   ];
 
   pname = import ../../utils/name/package.nix name;
@@ -49,9 +51,6 @@ let
     cd $src
     patch -p1 <${../../../patches/mpv-fix-missing-objc.patch}
     cd -
-
-    cp ${./swiftless/app_bridge.m} $src/osdep/mac/app_bridge.m
-    cp ${./swiftless/clipboard-mac.m} $src/player/clipboard/clipboard-mac.m
 
     cp -r $src $out
   '';
@@ -78,6 +77,10 @@ pkgs.stdenvNoCC.mkDerivation {
     ]
     ++ pkgs.lib.optionals (variant == "video") [ uchardet ];
   configurePhase = ''
+    export PATH=${pkgs.darwin.xcode}/Contents/Developer/usr/bin:$PATH
+    export MACOS_SDK=${pkgs.darwin.xcode}/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    export MACOS_SDK_VERSION=$(${pkgs.darwin.xcode}/Contents/Developer/usr/bin/xcodebuild -sdk macosx -version ProductVersion 2>/dev/null || echo 0.0)
+
     DISABLE_ALL_OPTIONS=(
       `# booleans`
       -Dgpl=false `# GPL (version 2 or later) build`
@@ -179,7 +182,7 @@ pkgs.stdenvNoCC.mkDerivation {
       -Dmacos-cocoa-cb=disabled `# macOS libmpv backend`
       -Dmacos-media-player=disabled `# macOS Media Player support`
       -Dmacos-touchbar=disabled `# macOS Touch Bar support`
-      -Dswift-build=disabled `# macOS Swift build tools`
+      -Dswift-build=enabled `# macOS Swift build tools`
       -Dswift-flags= `# Optional Swift compiler flags`
 
       `# manpages`
@@ -260,6 +263,12 @@ pkgs.stdenvNoCC.mkDerivation {
       tee configure.log
   '';
   buildPhase = ''
+    mkdir -p .home .cache/clang .cache/swift-module-cache
+    export HOME=$PWD/.home
+    export XDG_CACHE_HOME=$PWD/.cache
+    export CLANG_MODULE_CACHE_PATH=$PWD/.cache/clang
+    export SWIFT_MODULECACHE_PATH=$PWD/.cache/swift-module-cache
+
     meson compile -vC build
   '';
   installPhase = ''

@@ -38,7 +38,7 @@ pkgs.stdenvNoCC.mkDerivation {
 
     cd $src/src
 
-    objs=$(printf '%s\n' *.c | rg -v '^(lua|luac)\\.c$')
+    objs=$(printf '%s\n' *.c | grep -vE '^(lua|luac)\.c$')
     $cc $cflags -fPIC -c $objs
     $cc $cflags -dynamiclib -install_name @rpath/liblua.dylib -current_version ${version} -compatibility_version 5.2 -o liblua.dylib *.o -lm
 

@@ -17,35 +17,13 @@ let
     name = "${pname}-source-${version}";
     inherit (packageLock) url sha256;
   };
-  patchedSource = pkgs.runCommand "${pname}-patched-source-${os}-${arch}-${version}" { } ''
-    cp -r ${src} src
-    chmod -R 777 src
-
-    cat > src/src/lua5.2.pc <<'EOF'
-prefix=${out}
-exec_prefix=''${prefix}
-includedir=''${prefix}/include
-libdir=''${prefix}/lib
-
-Name: Lua
-Description: An Extensible Extension Language
-Version: ${version}
-Libs: -L''${libdir} -llua
-Cflags: -I''${includedir}
-EOF
-
-    cp src/src/lua5.2.pc src/src/lua.pc
-    cp src/src/lua5.2.pc src/src/lua-5.2.pc
-
-    cp -r src $out
-  '';
 in
 
 pkgs.stdenvNoCC.mkDerivation {
   name = "${pname}-${os}-${arch}-${version}";
   pname = pname;
   inherit version;
-  src = patchedSource;
+  inherit src;
   dontUnpack = true;
   enableParallelBuilding = true;
   nativeBuildInputs = [
@@ -63,6 +41,22 @@ pkgs.stdenvNoCC.mkDerivation {
     objs=$(printf '%s\n' *.c | rg -v '^(lua|luac)\\.c$')
     $cc $cflags -fPIC -c $objs
     $cc $cflags -dynamiclib -install_name @rpath/liblua.dylib -current_version ${version} -compatibility_version 5.2 -o liblua.dylib *.o -lm
+
+    cat > lua5.2.pc <<EOF
+prefix=$out
+exec_prefix=\${prefix}
+includedir=\${prefix}/include
+libdir=\${prefix}/lib
+
+Name: Lua
+Description: An Extensible Extension Language
+Version: ${version}
+Libs: -L\${libdir} -llua
+Cflags: -I\${includedir}
+EOF
+
+    cp lua5.2.pc lua.pc
+    cp lua5.2.pc lua-5.2.pc
 
     cp liblua.dylib $out/lib/
     cp lua.h luaconf.h lualib.h lauxlib.h lua.hpp $out/include/

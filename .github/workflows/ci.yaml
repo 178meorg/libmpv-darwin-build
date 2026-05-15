@@ -74,13 +74,13 @@ jobs:
           nix develop -c make \
             XCODE_PATH=${XCODE_PATH} \
             VERSION=${VERSION} \
-            TARGET=mk-out-archive-libs-macos-arm64-video-default
+            TARGET=mk-out-archive-libs-macos-arm64-video-full
           cp -R result/. dist/arm64/
 
           nix develop -c make \
             XCODE_PATH=${XCODE_PATH} \
             VERSION=${VERSION} \
-            TARGET=mk-out-archive-libs-macos-amd64-video-default
+            TARGET=mk-out-archive-libs-macos-amd64-video-full
           cp -R result/. dist/amd64/
 
       - name: Upload artifacts
